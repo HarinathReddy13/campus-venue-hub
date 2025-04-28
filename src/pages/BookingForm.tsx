@@ -68,7 +68,7 @@ export default function BookingForm() {
   const defaultValues: Partial<BookingFormValues> = {
     title: "",
     description: "",
-    attendees: "1",
+    attendees: undefined, // Change from "1" to undefined
     eventType: "",
     requirements: "",
   };

@@ -9,7 +9,131 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      bookings: {
+        Row: {
+          attendees: number
+          created_at: string
+          date: string
+          description: string
+          event_type: string
+          id: string
+          requirements: string | null
+          status: string
+          time_slot: string
+          title: string
+          updated_at: string
+          user_id: string
+          venue_id: string
+        }
+        Insert: {
+          attendees: number
+          created_at?: string
+          date: string
+          description: string
+          event_type: string
+          id?: string
+          requirements?: string | null
+          status?: string
+          time_slot: string
+          title: string
+          updated_at?: string
+          user_id: string
+          venue_id: string
+        }
+        Update: {
+          attendees?: number
+          created_at?: string
+          date?: string
+          description?: string
+          event_type?: string
+          id?: string
+          requirements?: string | null
+          status?: string
+          time_slot?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+          venue_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_venue_id_fkey"
+            columns: ["venue_id"]
+            isOneToOne: false
+            referencedRelation: "venues"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          name: string
+          role: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id: string
+          name: string
+          role?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          name?: string
+          role?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      venues: {
+        Row: {
+          amenities: string[]
+          capacity: number
+          category: string
+          created_at: string
+          description: string
+          id: string
+          image_url: string | null
+          location: string
+          name: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          amenities?: string[]
+          capacity: number
+          category: string
+          created_at?: string
+          description: string
+          id?: string
+          image_url?: string | null
+          location: string
+          name: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          amenities?: string[]
+          capacity?: number
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          image_url?: string | null
+          location?: string
+          name?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
