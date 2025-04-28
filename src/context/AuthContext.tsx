@@ -1,7 +1,6 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useNavigate } from "react-router-dom";
 import { useToast } from "@/components/ui/use-toast";
 
 type User = {
@@ -26,7 +25,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const navigate = useNavigate();
   const { toast } = useToast();
 
   useEffect(() => {
@@ -46,7 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
               id: session.user.id,
               name: profile.name,
               email: profile.email,
-              role: profile.role
+              role: profile.role as "user" | "admin"
             });
           }
         } else {
@@ -70,7 +68,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 id: session.user.id,
                 name: profile.name,
                 email: profile.email,
-                role: profile.role
+                role: profile.role as "user" | "admin"
               });
             }
             setIsLoading(false);
@@ -94,7 +92,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (error) throw error;
       
-      navigate('/');
       toast({
         title: "Welcome back!",
         description: "You have successfully logged in.",
@@ -127,7 +124,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         title: "Registration successful!",
         description: "Welcome to BookMyVenue!",
       });
-      navigate('/');
     } catch (error: any) {
       toast({
         title: "Registration failed",
@@ -144,7 +140,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (error) throw error;
       
       setUser(null);
-      navigate('/login');
       toast({
         title: "Logged out",
         description: "You have been successfully logged out.",

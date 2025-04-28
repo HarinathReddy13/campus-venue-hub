@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,9 +14,16 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { register } = useAuth();
+  const { register, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,17 +40,9 @@ export default function Register() {
 
     try {
       await register(name, email, password);
-      toast({
-        title: "Registration successful",
-        description: "Welcome to BookMyVenue!",
-      });
       navigate("/");
     } catch (error) {
-      toast({
-        title: "Registration failed",
-        description: "Something went wrong. Please try again later.",
-        variant: "destructive",
-      });
+      console.error("Registration error:", error);
     } finally {
       setIsSubmitting(false);
     }
