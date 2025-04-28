@@ -37,14 +37,7 @@ export default function Login() {
       navigate("/");
     } catch (error: any) {
       console.error("Login error:", error);
-      
-      if (error.message?.includes("Email not confirmed")) {
-        setErrorMessage(
-          "Your email is not confirmed. Please check your inbox for the confirmation email or contact support."
-        );
-      } else {
-        setErrorMessage(error.message || "Failed to login. Please check your credentials.");
-      }
+      setErrorMessage(error.message || "Failed to login. Please check your credentials.");
     } finally {
       setIsSubmitting(false);
     }

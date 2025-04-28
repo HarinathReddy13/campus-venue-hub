@@ -8,7 +8,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useToast } from "@/components/ui/use-toast";
 import { useAuth } from "@/context/AuthContext";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { InfoIcon } from "lucide-react";
+import { AlertCircle } from "lucide-react";
 
 export default function Register() {
   const [name, setName] = useState("");
@@ -16,7 +16,7 @@ export default function Register() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const { register, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -40,53 +40,18 @@ export default function Register() {
     }
 
     setIsSubmitting(true);
+    setErrorMessage(null);
 
     try {
       await register(name, email, password);
-      setSuccess(true);
-      toast({
-        title: "Registration successful!",
-        description: "Please check your email to confirm your account.",
-      });
+      // Registration will automatically log the user in
     } catch (error: any) {
       console.error("Registration error:", error);
-      toast({
-        title: "Registration failed",
-        description: error.message || "An error occurred during registration.",
-        variant: "destructive",
-      });
+      setErrorMessage(error.message || "An error occurred during registration.");
     } finally {
       setIsSubmitting(false);
     }
   };
-
-  if (success) {
-    return (
-      <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
-        <div className="w-full max-w-md">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold text-center">Verification Required</CardTitle>
-            </CardHeader>
-            <CardContent className="text-center">
-              <div className="flex justify-center mb-4">
-                <InfoIcon className="h-12 w-12 text-blue-500" />
-              </div>
-              <p className="mb-4">
-                We've sent a confirmation email to <strong>{email}</strong>.
-              </p>
-              <p className="mb-4">
-                Please check your inbox and click the verification link to activate your account.
-              </p>
-              <Button variant="outline" className="mt-2" onClick={() => navigate("/login")}>
-                Go to Login
-              </Button>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
@@ -99,12 +64,12 @@ export default function Register() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Alert className="mb-4">
-              <InfoIcon className="h-4 w-4" />
-              <AlertDescription>
-                After registering, you'll need to confirm your email before you can log in.
-              </AlertDescription>
-            </Alert>
+            {errorMessage && (
+              <Alert variant="destructive" className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{errorMessage}</AlertDescription>
+              </Alert>
+            )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="name">Full Name</Label>
