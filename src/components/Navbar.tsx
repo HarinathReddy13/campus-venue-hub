@@ -1,11 +1,18 @@
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useAuth } from "@/context/AuthContext";
+import { useEffect } from "react";
 
 export default function Navbar() {
-  const { user, isAuthenticated, logout } = useAuth();
+  const { user, isAuthenticated, logout, isLoading } = useAuth();
+  const navigate = useNavigate();
+  
+  const handleLogout = async () => {
+    await logout();
+    navigate("/");
+  };
   
   return (
     <div className="border-b">
@@ -33,7 +40,7 @@ export default function Navbar() {
         </Link>
 
         <div className="ml-auto flex items-center space-x-4">
-          {isAuthenticated ? (
+          {!isLoading && isAuthenticated ? (
             <>
               {user?.role === 'admin' && (
                 <Link to="/admin">
@@ -43,7 +50,7 @@ export default function Navbar() {
               <Link to="/dashboard">
                 <Button variant="ghost">Dashboard</Button>
               </Link>
-              <Button onClick={logout} variant="outline">
+              <Button onClick={handleLogout} variant="outline">
                 Logout
               </Button>
             </>

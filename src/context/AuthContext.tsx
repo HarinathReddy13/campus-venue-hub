@@ -108,7 +108,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   const register = async (name: string, email: string, password: string) => {
     try {
-      // Use signUp with autoconfirm option since we're removing email confirmation
+      // Register without email confirmation
       const { error, data } = await supabase.auth.signUp({
         email,
         password,
@@ -123,16 +123,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       if (error) throw error;
 
       // If no error, consider the user successfully registered
-      // The trigger will create their profile
       toast({
         title: "Registration successful!",
         description: "Welcome to BookMyVenue!",
       });
-
-      // After registration, automatically sign them in
-      if (data.user) {
-        await login(email, password);
-      }
     } catch (error: any) {
       toast({
         title: "Registration failed",

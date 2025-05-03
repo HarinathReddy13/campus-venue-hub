@@ -23,7 +23,7 @@ export default function Login() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/");
+      navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
 
@@ -34,7 +34,7 @@ export default function Login() {
 
     try {
       await login(email, password);
-      navigate("/");
+      navigate("/dashboard");
     } catch (error: any) {
       console.error("Login error:", error);
       setErrorMessage(error.message || "Failed to login. Please check your credentials.");
